@@ -1,0 +1,23 @@
+{
+  "name": "env",
+  "version": "0.1.0",
+  "description": "Allows a comfortable handling of environment variables",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/jest"
+  },
+  "keywords": [
+    "env",
+    "variables"
+  ],
+  "author": "Jan Wiemers",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^26.0.13",
+    "@types/node": "^14.6.3",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.3.0",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.2"
+  }
+}
