@@ -1,4 +1,4 @@
-import { envConstructorOptions } from "./types/env";
+import { envConstructorOptions } from "./types";
 
 interface tenvInterface {
   loadDefaults(filePath: string): Promise<void>;
@@ -71,7 +71,6 @@ export default class tenv implements tenvInterface {
           try {
             parsed = JSON.parse(variable);
           } catch (e) {
-            console.log(typeof variable);
             parsed = variable.split(",");
           }
         }
@@ -102,16 +101,6 @@ export default class tenv implements tenvInterface {
     this.baseError("Module has no Keys");
   }
 
-  /**
- * Loads a given file and sets it as default.
- * The order of presendence will be
- * - second argument
- * - loaded from file
- * - environment variables
- *
- * @param filePath - path to the file
- * @returns Promise<void>
- */
   public async loadDefaults(filePath: string): Promise<void> {
     let defaults: any;
     try {
@@ -151,7 +140,6 @@ export default class tenv implements tenvInterface {
     return this.getTypedEnvironmenVariable(name, defaultValue, "array");
   }
 
-  /* 
   public quiet() {
     this.throwOnError = false;
   }
