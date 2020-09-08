@@ -1,6 +1,6 @@
 import { envConstructorOptions } from "./types/env";
 
-interface envInterface {
+interface tenvInterface {
   loadDefaults(filePath: string): Promise<void>;
   getString(name: string, defaultValue: string): string;
   getInt(name: string, defaultValue: number): number;
@@ -8,10 +8,11 @@ interface envInterface {
   getArray(name: string, defaultValue: any[]): any[];
 }
 
-export default class env implements envInterface {
+export default class tenv implements tenvInterface {
   private prefixSeparate: string = "_";
   private prefix: string = "";
   private defaults: object = {};
+  private throwOnError: boolean = true;
 
   constructor(options?: envConstructorOptions) {
     if (!options) return;
@@ -80,22 +81,37 @@ export default class env implements envInterface {
     return parsed;
   }
 
+  private baseError(error: string) {
+    if (!this.throwOnError) return undefined;
+    throw new Error(error);
+  }
+
   private typeConersionError() {
-    throw new Error("Cannot convert types error");
+    this.baseError("Cannot convert types error");
   }
 
   private moduleNotFoundError() {
-    throw new Error("Cannot find Module");
+    this.baseError("Cannot find Module");
   }
 
   private moduleStructureWrongError() {
-    throw new Error("Module Structure wrong");
+    this.baseError("Module Structure wrong");
   }
 
   private moduleEmptyError() {
-    throw new Error("Module has no Keys");
+    this.baseError("Module has no Keys");
   }
 
+  /**
+ * Loads a given file and sets it as default.
+ * The order of presendence will be
+ * - second argument
+ * - loaded from file
+ * - environment variables
+ *
+ * @param filePath - path to the file
+ * @returns Promise<void>
+ */
   public async loadDefaults(filePath: string): Promise<void> {
     let defaults: any;
     try {
@@ -123,11 +139,20 @@ export default class env implements envInterface {
     return this.getTypedEnvironmenVariable(name, defaultValue, "int");
   }
 
+  public getIntOrAny(name: string, defaultValue?: number): number | any {
+    return this.getTypedEnvironmenVariable(name, defaultValue, "int");
+  }
+
   public getFloat(name: string, defaultValue?: number): number {
     return this.getTypedEnvironmenVariable(name, defaultValue, "float");
   }
 
   public getArray(name: string, defaultValue?: any[]): any[] {
     return this.getTypedEnvironmenVariable(name, defaultValue, "array");
+  }
+
+  /* 
+  public quiet() {
+    this.throwOnError = false;
   }
 }
