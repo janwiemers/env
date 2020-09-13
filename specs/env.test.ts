@@ -54,7 +54,9 @@ describe("Env", () => {
     });
 
     test("variable default value", () => {
-      expect(env.getString("FOO", "foo")).toEqual("foo");
+      process.env.FOO = "1";
+      env = new Env();
+      expect(env.getString("FOO", "foo")).toEqual("1");
     });
   });
 

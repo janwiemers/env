@@ -120,26 +120,54 @@ export default class tenv implements tenvInterface {
     this.defaults = defaults.defaults;
   }
 
+  /**
+   * returns a string
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getString(name: string, defaultValue?: string): string {
     return this.getTypedEnvironmenVariable(name, defaultValue, "string");
   }
 
+  /**
+   * Returns an integer
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getInt(name: string, defaultValue?: number): number {
     return this.getTypedEnvironmenVariable(name, defaultValue, "int");
   }
 
+  /**
+   *
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getIntOrAny(name: string, defaultValue?: number): number | any {
     return this.getTypedEnvironmenVariable(name, defaultValue, "int");
   }
 
+  /**
+   * Returns a float
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getFloat(name: string, defaultValue?: number): number {
     return this.getTypedEnvironmenVariable(name, defaultValue, "float");
   }
 
+  /**
+   * Returns an array. I can parse a `JSON`` back to an array or it splits a string at a `,`
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getArray(name: string, defaultValue?: any[]): any[] {
     return this.getTypedEnvironmenVariable(name, defaultValue, "array");
   }
 
+  /**
+   * Will prevent tenv to throw errors
+   */
   public quiet() {
     this.throwOnError = false;
   }
