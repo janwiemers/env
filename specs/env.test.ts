@@ -131,4 +131,24 @@ describe("Env", () => {
       delete process.env["FOO"];
     });
   });
+
+  describe("getBoolean", () => {
+    ["y", "yes", "1", "true", "on"].forEach((t: string) => {
+      test(`variable exists as "${t}"`, () => {
+        process.env.FOO = t;
+        env = new Env();
+        expect(env.getBoolean("FOO")).toEqual(true);
+        delete process.env["FOO"];
+      });
+    });
+
+    ["n", "no", "0", "false", "off"].forEach((t: string) => {
+      test(`variable exists as "${t}"`, () => {
+        process.env.FOO = t;
+        env = new Env();
+        expect(env.getBoolean("FOO")).toEqual(false);
+        delete process.env["FOO"];
+      });
+    });
+  });
 });
