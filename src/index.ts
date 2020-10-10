@@ -6,6 +6,7 @@ interface tenvInterface {
   getInt(name: string, defaultValue: number): number;
   getFloat(name: string, defaultValue: number): number;
   getArray(name: string, defaultValue: any[]): any[];
+  getBoolean(name: string, defaultValue: boolean): boolean;
 }
 
 export default class tenv implements tenvInterface {
@@ -58,6 +59,17 @@ export default class tenv implements tenvInterface {
         return String(variable);
       case "int":
         parsed = parseInt(variable);
+        if (isNaN(parsed)) return this.typeConersionError();
+        break;
+      case "boolean":
+        if (["true", "yes", "y", "1", "on"].includes(variable)) {
+          parsed = true;
+        }
+
+        if (["false", "no", "n", "0", "off"].includes(variable)) {
+          parsed = false;
+        }
+
         if (isNaN(parsed)) return this.typeConersionError();
         break;
       case "float":
@@ -120,26 +132,65 @@ export default class tenv implements tenvInterface {
     this.defaults = defaults.defaults;
   }
 
+  /**
+   * returns a string
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getString(name: string, defaultValue?: string): string {
     return this.getTypedEnvironmenVariable(name, defaultValue, "string");
   }
 
+  /**
+   * returns a boolean
+   * True values are one of `true` "true", "yes", "1" and 'on'
+   * False values are one of `false` "false", "no", "0", 'off'
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
+  public getBoolean(name: string, defaultValue?: boolean): boolean {
+    return this.getTypedEnvironmenVariable(name, defaultValue, "boolean");
+  }
+
+  /**
+   * Returns an integer
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getInt(name: string, defaultValue?: number): number {
     return this.getTypedEnvironmenVariable(name, defaultValue, "int");
   }
 
+  /**
+   *
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getIntOrAny(name: string, defaultValue?: number): number | any {
     return this.getTypedEnvironmenVariable(name, defaultValue, "int");
   }
 
+  /**
+   * Returns a float
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getFloat(name: string, defaultValue?: number): number {
     return this.getTypedEnvironmenVariable(name, defaultValue, "float");
   }
 
+  /**
+   * Returns an array. I can parse a `JSON`` back to an array or it splits a string at a `,`
+   * @param name Defines the environment variable to fetch
+   * @param defaultValue Defines the fallback value in case the requested variable is not found in the defaults nor the environment
+   */
   public getArray(name: string, defaultValue?: any[]): any[] {
     return this.getTypedEnvironmenVariable(name, defaultValue, "array");
   }
 
+  /**
+   * Will prevent tenv to throw errors
+   */
   public quiet() {
     this.throwOnError = false;
   }

@@ -54,7 +54,9 @@ describe("Env", () => {
     });
 
     test("variable default value", () => {
-      expect(env.getString("FOO", "foo")).toEqual("foo");
+      process.env.FOO = "1";
+      env = new Env();
+      expect(env.getString("FOO", "foo")).toEqual("1");
     });
   });
 
@@ -127,6 +129,26 @@ describe("Env", () => {
       env = new Env();
       expect(() => env.getFloat("FOO")).toThrow();
       delete process.env["FOO"];
+    });
+  });
+
+  describe("getBoolean", () => {
+    ["y", "yes", "1", "true", "on"].forEach((t: string) => {
+      test(`variable exists as "${t}"`, () => {
+        process.env.FOO = t;
+        env = new Env();
+        expect(env.getBoolean("FOO")).toEqual(true);
+        delete process.env["FOO"];
+      });
+    });
+
+    ["n", "no", "0", "false", "off"].forEach((t: string) => {
+      test(`variable exists as "${t}"`, () => {
+        process.env.FOO = t;
+        env = new Env();
+        expect(env.getBoolean("FOO")).toEqual(false);
+        delete process.env["FOO"];
+      });
     });
   });
 });
