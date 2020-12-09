@@ -133,6 +133,10 @@ describe("Env", () => {
   });
 
   describe("getBoolean", () => {
+    test(`variable does not exists`, () => {
+      expect(env.getBoolean("FOO", true)).toEqual(true);
+    });
+
     ["y", "yes", "1", "true", "on"].forEach((t: string) => {
       test(`variable exists as "${t}"`, () => {
         process.env.FOO = t;
@@ -144,6 +148,14 @@ describe("Env", () => {
 
     ["n", "no", "0", "false", "off"].forEach((t: string) => {
       test(`variable exists as "${t}"`, () => {
+        process.env.FOO = t;
+        env = new Env();
+        expect(env.getBoolean("FOO")).toEqual(false);
+        delete process.env["FOO"];
+      });
+    });
+    ["nope", "not", "here"].forEach((t: string) => {
+      test(`variable exists as  "${t}"`, () => {
         process.env.FOO = t;
         env = new Env();
         expect(env.getBoolean("FOO")).toEqual(false);

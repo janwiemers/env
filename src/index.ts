@@ -62,15 +62,16 @@ export default class tenv implements tenvInterface {
         if (isNaN(parsed)) return this.typeConersionError();
         break;
       case "boolean":
-        if (["true", "yes", "y", "1", "on"].includes(variable)) {
+        if(typeof variable == "boolean") {
+          parsed = variable
+        } else if (["true", "yes", "y", "1", "on"].includes(variable)) {
           parsed = true;
-        }
-
-        if (["false", "no", "n", "0", "off"].includes(variable)) {
+        } else if (["false", "no", "n", "0", "off"].includes(variable)) {
           parsed = false;
+        } else {
+          parsed = false
         }
 
-        if (isNaN(parsed)) return this.typeConersionError();
         break;
       case "float":
         parsed = parseFloat(variable);

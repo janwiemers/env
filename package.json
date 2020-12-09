@@ -1,6 +1,6 @@
 {
   "name": "tenv",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Allows a comfortable handling of environment variables",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
